@@ -1,9 +1,8 @@
-from fileinput import filename
 import json
 import jsonpatch
 
 
-class input_config():
+class input_config:
     def get_default_input():
         return {
             "Configuration": {
@@ -33,7 +32,7 @@ class input_config():
                 "cycles_per_check": 1000000,
                 "load_checkpoint": False,
                 "max_steps": 18446744073709551615,
-                "max_time": 10.0,
+                "max_time": 0.2,
                 "per_cycle_callback": False,
                 "per_step_callback": False,
                 "skip_impossible_updates": False,
@@ -83,24 +82,5 @@ class input_config():
         patch = []
         for key, value in kwargs.items():
             patch.append({"op": "replace", "path": key, "value": value})
-        print(f"patch = {patch}")
         jsonpatch.apply_patch(input, patch, in_place=True)
         return json.dumps(input, indent=2)
-
-
-class multi_alpha_config():
-    alphas = [1]
-    factory = input_config()
-
-    def alphas(self, a):
-        self.alphas = a
-        return self
-
-    def get_input(self, index=0):
-        kwargs = {
-            "/Configuration/alpha_": self.alphas[index]
-        }
-        return self.factory.generate(**kwargs)
-
-    def __iter__(self):
-        return multi_alpha_iterator

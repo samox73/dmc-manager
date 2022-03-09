@@ -4,7 +4,6 @@ import os
 import shutil
 
 from scipy.fft import fft
-from manager.json_parser import fft_to_json, run_properties_to_json
 
 from manager.store import store
 
@@ -50,23 +49,13 @@ class run_executor:
                 print(f"Got error: {e}")
             os.chdir(self.runs_dir_)
 
-    def run(self, executable="self_energy_dmc", filename="input.json"):
+    def run(self, cmds="dmc"):
         for run_dir in self.run_dirs_:
             os.chdir(f"{self.runs_dir_}/{run_dir}")
-            print(f"Starting simulation in {run_dir}")
-            subprocess.run([executable, filename])
+            subprocess.run(cmds.split())
 
-    def save(self):
+    def save(self, function):
         for run_dir in self.run_dirs_:
             os.chdir(f"{self.runs_dir_}/{run_dir}")
-            print(f"Saving {run_dir}")
-            fft_raw = fft_to_json()
-            fft = {
-                "taus": fft_raw["tau"],
-                "G0_t": fft_raw["G0_t"],
-                "S_higher_t": fft_raw["S_higher_t"],
-                "G_w": fft_raw["G_w"],
-                "G_t": fft_raw["G_t"],
-            }
-            run_properties = run_properties_to_json()
-            self.store_.add(run_properties, fft)
+            items = function()
+            self.store_.add(items)

@@ -6,9 +6,5 @@ class store:
     selfenergydb = client["selfenergy"]
     collection = selfenergydb["store"]
 
-    def add(self, run_properties, fft, checkpoints={}):
-        self.collection.insert_one({
-            "run_properties": run_properties,
-            "fft": fft,
-            # "checkpoints": checkpoints
-        })
+    def add(self, object):
+        self.collection.insert_one(object)

@@ -26,9 +26,9 @@ class run_executor:
     def clear(self):
         shutil.rmtree(self.runs_dir_, ignore_errors=True)
 
-    def initialize(self, reset=False):
+    def initialize(self, clear=False):
         self.run_dirs_.clear()
-        if reset:
+        if clear:
             self.clear()
         try:
             os.mkdir(self.runs_dir_)
@@ -36,15 +36,16 @@ class run_executor:
             print(error)
         os.chdir(self.runs_dir_)
 
-        for config, params, index in self.configs_:
+        index = 0
+        for config in self.configs_:
             run_dir = f"run_{index}"
+            index += 1
             self.run_dirs_.append(run_dir)
             try:
                 os.mkdir(run_dir)
                 os.chdir(run_dir)
                 with open("input.json", "w") as input_file:
                     input_file.write(config)
-                print(params)
             except Exception as e:
                 print(f"Got error: {e}")
             os.chdir(self.runs_dir_)

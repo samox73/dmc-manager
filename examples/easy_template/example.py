@@ -7,9 +7,8 @@ from manager.factory.easy_config import *
 
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.rcsetup as rcsetup
 
-store = store()
+store = store(collection_name="examples")
 
 # ============= RESET STORE ============
 c = store.collection.delete_many({})
@@ -17,8 +16,8 @@ print(f"Deleted {c.deleted_count} documents from the store")
 
 # ============= SIMULATION =============
 root_dir = pathlib.Path().resolve()
-project_name = "p_vs_e"
-cfg_dir = f"{root_dir}/calculations/{project_name}"
+project_name = "easy_template"
+cfg_dir = f"{root_dir}/examples/{project_name}"
 cfg_template_path = f"{cfg_dir}/default_config.json"
 run_dir = f"{cfg_dir}/runs"
 
@@ -26,8 +25,8 @@ run_dir = f"{cfg_dir}/runs"
 easy_config = easy_config()
 easy_config.get_default_input(cfg_template_path)
 alpha = 1
-momenta = np.linspace(0, 1.6, 17)
-max_steps = 100_000_000
+momenta = np.linspace(0, 1.4, 10)
+max_steps = 10_000_000
 
 # iterate over all iterable arguments
 configs = []
@@ -45,9 +44,12 @@ for momentum in momenta:
 
 executor = run_executor().configs(configs).run_dir(run_dir).store(store)
 executor.initialize(clear=True)
+
+# specify the executable just like you would in a terminal
 executor.run("mpirun -c 12 dmc")
 
-
+# saving and plotting is completely optional, but relies on a running mongoDB server
+# you can customize the the url when initializing the store
 # ============= SAVING =============
 def save_func():
     fft_raw = fft_to_json()

@@ -7,6 +7,3 @@ class store:
         self.client = pymongo.MongoClient(url)
         self.selfenergydb = self.client["selfenergy"]
         self.collection = self.selfenergydb[collection_name]
-
-    def add(self, object):
-        self.collection.insert_one(object)

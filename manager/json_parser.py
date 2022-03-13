@@ -22,6 +22,6 @@ def fft_to_json(filename="fft.dat"):
     return doc
 
 
-def run_properties_to_json(filename="run_properties.json"):
-    with open("run_properties.json", "r") as file:
+def file_to_json(filename):
+    with open(filename, "r") as file:
         return json.load(file)

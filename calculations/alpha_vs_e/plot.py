@@ -7,7 +7,11 @@ from calculations.colors import setup_matplotlib
 setup_matplotlib()
 
 # ============= RETRIEVAL =============
-filter = {"run_properties.momentum": momentum, "tags.project": project_name}
+filter = {
+    "run_properties.momentum": momentum,
+    "tags.project": project_name,
+    "run_properties.steps_done_total": {"$gt": 2000000000},
+}
 results = store.collection.find(filter)
 N = store.collection.count_documents(filter)
 print(f"retrieved {N} documents with filter {filter}")

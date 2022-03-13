@@ -31,7 +31,7 @@ def fit_exp(
 
 
 def E1(momenta_, alphas_):
-    if momenta_ == 0:
+    if not isinstance(momenta_, np.ndarray) and momenta_ == 0:
         return -alphas_
     else:
         return np.power(momenta_, 2) / 2 - alphas_ * np.sqrt(2) / momenta_ * np.arcsin(

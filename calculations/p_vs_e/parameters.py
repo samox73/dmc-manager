@@ -6,7 +6,7 @@ from manager.store import store
 
 project_name = "p_vs_e"
 store = store(collection_name=project_name)
-root_dir = pathlib.Path().resolve()
+root_dir = "/home/samox/computing/dmcmanager"
 cfg_dir = f"{root_dir}/calculations/{project_name}"
 cfg_template_path = f"{cfg_dir}/default_config.json"
 run_dir = f"{cfg_dir}/runs"

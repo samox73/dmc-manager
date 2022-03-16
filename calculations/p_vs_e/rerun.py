@@ -1,6 +1,6 @@
 from pathlib import Path
 import shutil
-from calculations.utils import assure_input_correct, save_func
+from calculations.utils import save_func
 from manager.json_parser import file_to_json
 from manager.factory.easy_config import *
 from parameters import *
@@ -21,8 +21,16 @@ run_dir = f"{cfg_dir}/rerun"
 shutil.rmtree(run_dir, ignore_errors=True)
 os.mkdir(run_dir)
 os.chdir(run_dir)
+
+# fetch and story the found results from the database
+documents = []
 for doc in docs:
+    documents.append(doc.copy())
+
+# iterate over the results and perform a simulation for each
+for doc in documents:
     input = doc["input"]
+    input["Simulation"]["max_steps"] = 1_000_000_000
     with open("input.json", "w") as cfg:
         json.dump(input, cfg, indent=2)
     checkpoints = doc["checkpoints"]

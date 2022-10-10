@@ -7,7 +7,6 @@ class easy_config:
     config_ = {}
 
     def get_default_input(self, cfg_path):
-        print(os.getcwd())
         with open(cfg_path, "r") as file:
             self.config_ = json.load(file)
 

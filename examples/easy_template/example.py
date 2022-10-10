@@ -22,8 +22,8 @@ cfg_template_path = f"{cfg_dir}/default_config.json"
 run_dir = f"{cfg_dir}/runs"
 
 # specify all arguments
-easy_config = easy_config()
-easy_config.get_default_input(cfg_template_path)
+config = config()
+config.get_default_input(cfg_template_path)
 alpha = 1
 momenta = np.linspace(0, 1.4, 10)
 max_steps = 10_000_000
@@ -39,7 +39,7 @@ for momentum in momenta:
         "/Simulation/max_time": 999_999_999,
     }
     # generate and save the config in an array
-    config = easy_config.generate(**patch)
+    config = config.generate(**patch)
     configs.append(config)
 
 executor = run_executor().configs(configs).run_dir(run_dir).store(store)

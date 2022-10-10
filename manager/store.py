@@ -1,4 +1,5 @@
 import pymongo
+import gridfs
 
 
 class store:
@@ -7,3 +8,5 @@ class store:
         self.client = pymongo.MongoClient(url)
         self.selfenergydb = self.client["selfenergy"]
         self.collection = self.selfenergydb[collection_name]
+        self.gridfs = gridfs.GridFS(self.selfenergydb, collection=collection_name)
+        # self.gridfs.put(tset, filename=)

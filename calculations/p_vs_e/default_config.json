@@ -2,7 +2,7 @@
     "Configuration": {
         "alpha": 1.0,
         "max_order": 10000,
-        "max_tau": 40.0,
+        "max_tau": 100.0,
         "min_order": 0,
         "momentum": 0.0,
         "mu": -1.1,
@@ -10,34 +10,55 @@
         "start_tau": 1.0
     },
     "Measurements": {
-        "histogram": {
-            "energy_estimate": -1.0168,
+        "common": {
+            "batches_count": 256,
+            "is_active": true
+        },
+        "energy": {
+            "batches_count": 256,
+            "energy_count": 25,
+            "delta": 0.2,
+            "estimate": -1.0168,
+            "is_active": true,
+            "power": 0.5,
+            "interpolation_size": 100000000
+        },
+        "hist": {
+            "batches_count": 256,
             "is_active": true,
             "num_bins": 4000
+        },
+        "diagram_statistics": {
+            "is_active": true,
+            "diagram_order": {
+                "size": 101,
+                "start": 0,
+                "end": 100
+            }
         }
     },
     "RNG": {
         "seed": 8267165747609980501
     },
     "Simulation": {
-        "checkpoint_after_steps": 1844674407370955161,
+        "checkpoint_after_steps": 9744073709551615,
         "checkpoint_after_time": 1.7976931348623157e+308,
         "checkpoint_callback": true,
         "cycles_per_check": 1000000,
         "load_checkpoint": true,
-        "max_steps": 1844674407370955161,
-        "max_time": 1.0,
-        "per_cycle_callback": false,
+        "max_steps": 9744073709551615,
+        "max_time": 9999999999999,
+        "per_cycle_callback": true,
         "per_step_callback": false,
         "skip_impossible_updates": false,
         "sort_updates": true,
         "steps_per_cycle": 5,
-        "warmup_checkpoint_after_steps": 1844674407370955161,
+        "warmup_checkpoint_after_steps": 9744073709551615,
         "warmup_checkpoint_after_time": 1.7976931348623157e+308,
         "warmup_checkpoint_callback": true,
         "warmup_per_step_callback": false,
-        "warmup_steps": 1000000,
-        "warmup_steps_per_cycle": 100000,
+        "warmup_steps": 9744073709551615,
+        "warmup_steps_per_cycle": 1000000,
         "warmup_time": 1.0
     },
     "Updates": {

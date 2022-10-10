@@ -1,14 +1,8 @@
-from calculations.utils import assure_input_correct, save_func
+from calculations.utils import assure_input_correct, checkpoint_func, save_func
 from manager.json_parser import file_to_json
 from manager.run_executor import run_executor
 from manager.factory.easy_config import *
 from parameters import *
-
-
-def index_func():
-    input_json = file_to_json("input.json")
-    index = {"input.Configuration.alpha": input_json["Configuration"]["alpha"]}
-    return index
 
 
 # specify all arguments
@@ -17,14 +11,17 @@ easy_config.get_default_input(cfg_template_path)
 
 # iterate over all iterable arguments
 configs = []
-print(f"\talpha\t\tmu")
+print(f"\talpha\tmu")
 print(f"\t--------------")
-for alpha, mu, max_step in zip(alphas, mus, max_steps):
-    # build the patch object
+for alpha, mu, max_step, e_estimate in zip(
+    alphas, mus, max_steps, energy_estimates
+):
     print(f"\t{alpha:.4f}\t\t{mu:.4f}")
+    # build the patch object
     patch = {
         "/Configuration/alpha": alpha,
         "/Configuration/momentum": momentum,
+        "/Measurements/energy/estimate": e_estimate,
         "/Configuration/mu": mu,
         "/Simulation/max_steps": max_step,
         "/Simulation/max_time": 999_999_999,
@@ -33,19 +30,12 @@ for alpha, mu, max_step in zip(alphas, mus, max_steps):
     config = easy_config.generate(**patch)
     configs.append(config)
 
-clear = False
-if clear and not assure_input_correct("Clearing all DB documents, continue?"):
-    print("Aborting...")
-    exit(0)
-
 executor = run_executor().configs(configs).run_dir(run_dir).store(store)
-executor.initialize(clear=True)
-if clear:
-    c = store.collection.delete_many({"tags.project": project_name})
-    print(f"Deleted {c.deleted_count} documents from the store")
 
-executor.set_index("input.Configuration.alpha")
-executor.run("mpirun -c 12 dmc", index_path=["Configuration", "alpha"])
-executor.save(
-    index_function=index_func, object_function=save_func, tags={"project": project_name}
-)
+if assure_input_correct("Clear all data?"):
+    executor.initialize(clear=True)
+else:
+    executor.initialize(clear=False)
+
+executor.set_index("input.Configuration.momentum")
+executor.run("mpirun -c 14 dmc")

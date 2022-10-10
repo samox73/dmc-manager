@@ -12,6 +12,7 @@ from manager.json_parser import file_to_json
 class run_executor:
     run_dirs_ = []
     generated_config_filename_ = "input.json"
+    index_ = None
 
     def configs(self, configs):
         self.configs_ = configs
@@ -45,14 +46,14 @@ class run_executor:
             self.run_dirs_.append(run_dir)
             try:
                 os.mkdir(run_dir)
-                os.chdir(run_dir)
-                with open(self.generated_config_filename_, "w") as input_file:
-                    input_file.write(config)
             except Exception as e:
                 print(f"Got error: {e}")
+            os.chdir(run_dir)
+            with open(self.generated_config_filename_, "w") as input_file:
+                input_file.write(config)
             os.chdir(self.runs_dir_)
 
-    def load_checkpoints(self, index_path=None):
+    def load_checkpoints(self, index_path):
         cfg = file_to_json(self.generated_config_filename_)
         # access dict by array of keys
         value = reduce(operator.getitem, index_path, cfg)
@@ -70,6 +71,9 @@ class run_executor:
     def run(self, cmds="dmc", index_path=None):
         for run_dir in self.run_dirs_:
             os.chdir(f"{self.runs_dir_}/{run_dir}")
+            if file_to_json("input.json")["Simulation"]["max_steps"] == 0:
+                print(f"Skipping simulation for {run_dir}")
+                continue
             print(f"Starting simulation for {run_dir}")
             if self.index_ is not None and index_path is not None:
                 self.load_checkpoints(index_path)
@@ -80,7 +84,7 @@ class run_executor:
         self.store_.collection.create_index(index)
         self.index_ = index
 
-    def save(self, index_function, object_function, **kwargs):
+    def save(self, index_function, object_function, checkpoint_function, **kwargs):
         """Saves the outputs of the supplied function to the MongoDB
 
         Args:
@@ -91,4 +95,7 @@ class run_executor:
             os.chdir(f"{self.runs_dir_}/{run_dir}")
             index = index_function()
             items = object_function(**kwargs)
+            checkpoints = checkpoint_function()
             self.store_.collection.replace_one(index, items, upsert=True)
+            indexval = index["input.Configuration.momentum"]
+            # self.store_.gridfs.put(checkpoints, filename=f"checkpoints_{indexval}")

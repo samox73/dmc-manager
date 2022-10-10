@@ -25,3 +25,8 @@ def fft_to_json(filename="fft.dat"):
 def file_to_json(filename):
     with open(filename, "r") as file:
         return json.load(file)
+
+
+def string_to_file(string, filename):
+    with open(filename, "w") as file:
+        return file.write(string)

@@ -3,10 +3,8 @@ import os
 from calculations.utils import build_color_linecollection
 from manager.analyzer import E1, E2, fit_exp
 from parameters import *
-from matplotlib.colors import ListedColormap, BoundaryNorm
 
-# ============= RETRIEVAL =============
-
+# Data retrieval
 filter = {
     "run_properties.alpha": alpha,
     "tags.project": project_name,
@@ -16,8 +14,9 @@ results = store.collection.find(filter)
 N = store.collection.count_documents(filter)
 print(f"retrieved {N} documents with filter {filter}")
 
-fig, ax = plt.subplots(1, 3, figsize=(20, 6))
 
+# Setup
+fig, ax = plt.subplots(1, 3, figsize=(20, 6))
 z_estimates = np.linspace(0.6, 0, N)
 energies = []
 momenta = []
@@ -68,16 +67,18 @@ ax[0].plot(
 
 paddingx = 0.1
 paddingy = 0.05
-lc = build_color_linecollection(momenta, energies, steps_done_total)
-line = ax[0].add_collection(lc)
-fig.colorbar(line, ax=ax[0])
+# lc = build_color_linecollection(momenta, energies, steps_done_total)
+# line = ax[0].add_collection(lc)
+# fig.colorbar(line, ax=ax[0])
+ax[0].plot(momenta, energies, "-o")
 ax[0].set_xlim(momenta.min() - paddingx, momenta.max() + paddingx)
 ax[0].set_ylim(energies.min() - paddingy, energies.max() + paddingy)
 ax[0].legend()
 
-lc = build_color_linecollection(momenta, z_values, steps_done_total)
-line = ax[1].add_collection(lc)
-fig.colorbar(line, ax=ax[1])
+# lc = build_color_linecollection(momenta, z_values, steps_done_total)
+# line = ax[1].add_collection(lc)
+# fig.colorbar(line, ax=ax[1])
+ax[1].plot(momenta, z_values, "-o")
 ax[1].set_xlim(momenta.min() - paddingx, momenta.max() + paddingx)
 ax[1].set_ylim(z_values.min() - paddingy, z_values.max() + paddingy)
 ax[1].legend()

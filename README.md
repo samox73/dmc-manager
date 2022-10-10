@@ -10,7 +10,7 @@ After setting it up, proceed as follows:
 - (in the root of this repository) `pip install -r requirements.txt`
 - (in the root of this repository) `add2virtualenv .`
 
-The last line is needed to that the directory gets included in the `PYTHONPATH`
+The last line is needed so that the directory gets included in the `PYTHONPATH`
 environment variable. This way we can use the module `manager` without actually
 installing it. But beware, this sets your working directory in python scipts 
 also to this path. That's why simple directory setup is needed at the begin 
